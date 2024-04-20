@@ -13,3 +13,6 @@ With a single connection, the user gains access to:
 The SDK provides sample codes to use the SDK in:
 1. C++, 32-bit and 64-bit.
 2. MetaTrader MQ4, 32-bit. This enables traders to copy the trade in an MT Terminal to the Fortex system. It opens up all possibilities.
+
+An account and an apikey from a Fortex trading system is required.  You can reach out to a broker that uses the Fortex system or create a demo account directly by going to their website https://fortex.com.
+
