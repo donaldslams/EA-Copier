@@ -1,4 +1,4 @@
-# MT-CopyTrader-Fortex
+# EA Copier
 Disclaimer: This is a community-based project covered by the MIT license.
 
 SDK Version 1.0.0.1
