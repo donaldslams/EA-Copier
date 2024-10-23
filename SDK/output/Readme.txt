@@ -1,5 +1,9 @@
 Disclaimer: This is a community-based project covered by the MIT license.
 
+SDK Version 1.1.0.0
+2024/10/23
+Bug fix for regular login to send doneaway trades to its own account.  Need authorization from the server.
+
 SDK Version 1.0.0.2
 2024/05/03
 Updated the FortexDef.h, Fortex.mq4, and Fortex.mq5 to include the definition for EXEC_TYPE.
