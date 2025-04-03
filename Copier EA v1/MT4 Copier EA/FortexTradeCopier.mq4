@@ -1,14 +1,14 @@
 //+------------------------------------------------------------------+
-//|                                            FortexTradeCopier.mq5 |
+//|                                            FortexTradeCopier.mq4 |
 //+------------------------------------------------------------------+
 
 #property version   "1.00"
 
 #include "Fortex.mq4"
-input string   APIEndPoint="demo4.fortex.com/WEBTRADER";
-input string   APIKey;
-input string   APIPwd;
-input string   APIAccount;
+input string   APIEndPoint="demo.fortex.com/WEBTRADER";
+input string   APIKey="";
+input string   APIPwd="";
+input string   APIAccount="";
 input bool     ConvertFXSymbol = true;
 
 char fortexaccount[];
@@ -123,7 +123,22 @@ void OnTimer()
                   else{
                      if(OrderType()==OP_BUY||OrderType()==OP_SELL){                        
                         //send close
-                        sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToClose,OrderTicket(),OrderType()==OP_BUY?OP_SELL:OP_BUY,OrderLots(),OrderClosePrice());
+                        if(StringSubstr(OrderComment(),0,4)!="to #") {
+                           sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToClose,OrderTicket(),OrderType()==OP_BUY?OP_SELL:OP_BUY,OrderLots(),OrderClosePrice());
+                        }else{
+                        // one of the partial fills to close a ticket, no way to know the original ticket number
+                           string ticketTo = StringSubstr(OrderComment(),4);
+                           int new_ticket=StringToInteger(ticketTo);
+                           if(new_ticket>0){ 
+                              double close_lot = OrderLots();
+                              double close_price = OrderClosePrice();
+                              OrderSelect(new_ticket,SELECT_BY_TICKET);
+                              sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToClose,cur_ticket_Prev,OrderType()==OP_BUY?OP_SELL:OP_BUY,close_lot + OrderLots(),close_price);
+                           }
+                           else{
+                              sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToClose,OrderTicket(),OrderType()==OP_BUY?OP_SELL:OP_BUY,OrderLots(),OrderClosePrice());
+                           }                           
+                        }
                      }
                   }
                }
@@ -134,7 +149,9 @@ void OnTimer()
                if(OrderSelect(cur_ticket_New,SELECT_BY_TICKET)){
                   if(newData.orders[iNew][OrderItem::cmd]==OP_BUY||newData.orders[iNew][OrderItem::cmd]==OP_SELL){
                      //send open
-                     sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToOpen,OrderTicket(),OrderType(),OrderLots(),OrderOpenPrice());
+                     if(StringSubstr(OrderComment(),0,6)!="from #"){
+                        sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToOpen,OrderTicket(),OrderType(),OrderLots(),OrderOpenPrice());
+                     }
                   }
                }
                iNew++;
@@ -164,7 +181,23 @@ void OnTimer()
                }else{
                   if(OrderType()==OP_BUY||OrderType()==OP_SELL){                        
                      //send close
-                      sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToClose,OrderTicket(),OrderType()==OP_BUY?OP_SELL:OP_BUY,OrderLots(),OrderClosePrice());
+                     if(StringSubstr(OrderComment(),0,6)!="from #") {
+                        sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToClose,OrderTicket(),OrderType()==OP_BUY?OP_SELL:OP_BUY,OrderLots(),OrderClosePrice());
+                     }else{
+                     /* the last fill of multiple fills to close a ticket
+                        string ticketFrom = StringSubstr(OrderComment(),6);
+                        int new_ticket=StringToInteger(ticketFrom);
+                        if(new_ticket>0){ 
+                           double close_lot = OrderLots();
+                           double close_price = OrderClosePrice();
+                           OrderSelect(new_ticket,SELECT_BY_TICKET);
+                           sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToClose,cur_ticket_Prev,OrderType()==OP_BUY?OP_SELL:OP_BUY,close_lot + OrderLots(),close_price);
+                        }
+                        else{
+                           sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToClose,OrderTicket(),OrderType()==OP_BUY?OP_SELL:OP_BUY,OrderLots(),OrderClosePrice());
+                        }                           
+                     */
+                     }
                   }
                }
             }
@@ -174,7 +207,9 @@ void OnTimer()
             if(OrderSelect(cur_ticket_New,SELECT_BY_TICKET)){
                if(newData.orders[iNew][OrderItem::cmd]==OP_BUY||newData.orders[iNew][OrderItem::cmd]==OP_SELL){
                   //send open
-                  sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToOpen,OrderTicket(),OrderType(),OrderLots(),OrderOpenPrice());
+                  if(StringSubstr(OrderComment(),0,6)!="from #") {
+                     sendDoneaway(OrderSymbol(),TICKET_DIRECTION::ToOpen,OrderTicket(),OrderType(),OrderLots(),OrderOpenPrice());
+                  }
                }
             }
             iNew++;

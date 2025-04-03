@@ -2,13 +2,13 @@
 //|                                            FortexTradeCopier.mq5 |
 //+------------------------------------------------------------------+
 
-#property version   "1.00"
+#property version   "1.10"
 
 #include "Fortex.mq5"
-input string   APIEndPoint="demo4.fortex.com/WEBTRADER";
-input string   APIKey;
-input string   APIPwd;
-input string   APIAccount;
+input string   APIEndPoint="demo.fortex.com/WEBTRADER";
+input string   APIKey="";
+input string   APIPwd="";
+input string   APIAccount="";
 input bool     ConvertFXSymbol = true;
 
 char fortexaccount[];
