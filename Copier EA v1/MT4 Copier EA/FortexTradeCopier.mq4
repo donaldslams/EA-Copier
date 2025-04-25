@@ -47,6 +47,8 @@ void fillData(TradeData& data){
 
 int OnInit()
   {
+   //must be initialised at the beginning of runtime to capture all old states
+   fillData(prevData);
 //---
    StringToCharArray(APIAccount, fortexaccount);
    char address[];
@@ -63,7 +65,7 @@ int OnInit()
       api_connected = true;   
    }
    
-   fillData(prevData);
+   // fillData(prevData);
    EventSetTimer(1);
    
 //---
