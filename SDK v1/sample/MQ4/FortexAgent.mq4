@@ -44,7 +44,7 @@ int init()
 int deinit()
   {
 //----
-   Logout();
+   Cleanup();
 //----
    return(0);
   }

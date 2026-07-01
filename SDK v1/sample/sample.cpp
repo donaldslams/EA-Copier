@@ -11,6 +11,8 @@ const char* szServer = nullptr;
 const char* apiKey = nullptr;
 const char* password = nullptr;
 const char* account = nullptr;
+const char* pfxFile = nullptr;
+const char* pfxPwd = nullptr;
 
 double bid_price = 0.0;
 void OnLogin() {
@@ -288,13 +290,13 @@ void callback_sample() {
 
 
     std::cout << "test fortex library." << std::endl;    
-    Init((char*)szServer, 1);
+    Init((char*)szServer, (char*)pfxFile, (char*)pfxPwd, 1);
     int ret = Connect();
     if (ret != 0) {
         std::cout << GetLastErrorMessage() << std::endl;
         return;
     }
-    ret = Login((char*)apiKey, (char*)password);
+    ret = Login((char*)account, (char*)apiKey, (char*)password);
     if (ret != 0) {
         std::cout << GetLastErrorMessage() << std::endl;
         return;
@@ -383,13 +385,13 @@ void callback_sample() {
 
 void polling_sample() {
     std::cout << "test fortex library." << std::endl;
-    Init((char*)szServer, 2);
+    Init((char*)szServer, (char*)pfxFile, (char*)pfxPwd, 2);
     int ret = Connect();
     if (ret != 0) {
         std::cout << GetLastErrorMessage() << std::endl;
         return;
     }
-    ret = Login((char*)apiKey, (char*)password);
+    ret = Login((char*)account, (char*)apiKey, (char*)password);
     if (ret != 0) {
         std::cout << GetLastErrorMessage() << std::endl;
         return;
@@ -613,13 +615,13 @@ void polling_sample() {
 
 void polling_sample_2() {
     std::cout << "test fortex library." << std::endl;
-    Init((char*)szServer, 2);
+    Init((char*)szServer, (char*)pfxFile, (char*)pfxPwd, 2);
     int ret = Connect();
     if (ret != 0) {
         std::cout << GetLastErrorMessage() << std::endl;
         return;
     }
-    ret = Login((char*)apiKey, (char*)password);
+    ret = Login((char*)account, (char*)apiKey, (char*)password);
     if (ret != 0) {
         std::cout << GetLastErrorMessage() << std::endl;
         return;
@@ -881,13 +883,13 @@ void polling_sample_2() {
 
 void demo(){
   std::cout << "test fortex library." << std::endl;
-  Init((char*)szServer, 2);
+  Init((char*)szServer, (char*)pfxFile, (char*)pfxPwd, 2);
   int ret = Connect();
   if (ret != 0) {
     std::cout << GetLastErrorMessage() << std::endl;
     return;
   }
-  ret = Login((char*)apiKey, (char*)password);
+  ret = Login((char*)account, (char*)apiKey, (char*)password);
   if (ret != 0) {
     std::cout << GetLastErrorMessage() << std::endl;
     return;
@@ -962,25 +964,86 @@ void demo(){
 
 }
 
+void demodoneaway() {
+
+  std::cout << "test fortex library." << std::endl;
+  Init((char*)szServer, (char*)pfxFile, (char*)pfxPwd, 2);
+  int ret = Connect();
+  if (ret != 0) {
+    std::cout << GetLastErrorMessage() << std::endl;
+    return;
+  }
+  ret = Login((char*)account, (char*)apiKey, (char*)password);
+  if (ret != 0) {
+    std::cout << GetLastErrorMessage() << std::endl;
+    return;
+  }
+  else {
+    std::cout << "login success." << std::endl;
+  }
+  ret = -1;
+  for (int i = 0; i < 100; i++) {
+    ret = GetState();
+    std::cout << "state:" << ret << std::endl;
+    if (ret != CONNECT_STATUS::LoginDone) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      continue;
+    }
+    break;
+  }
+  if (ret != CONNECT_STATUS::LoginDone) {
+    return;
+  }
+
+  char* symName = (char*)"EUR/USD";
+
+  ret = EnterDoneawayTrade((char*)account, symName, TICKET_DIRECTION::ToOpen, (char*)("#123"), ORDER_SIDE::BUY, 10000, 1.2);
+  if (ret != 0) {
+    std::cout << GetLastErrorMessage() << std::endl;
+  }
+  ret = EnterDoneawayTrade((char*)account, symName, TICKET_DIRECTION::ToClose, (char*)("#123"), ORDER_SIDE::SELL, 10000, 1.2);
+  if (ret != 0) {
+    std::cout << GetLastErrorMessage() << std::endl;
+  }
+}
+
 int main() { 
 
 // local dev
 // fillout the apikey info below
+/*
     szServer = (const char*)("x.x.x.x/API/V1");         // api end point example, actual endpoint should be provided by the vender, do not include "ws://"
     apiKey = (const char*)("xxxxxxxxxxx");              // apikey
     password = (const char*)("xxxxxxxxx");              // apikeypwd
     account = (const char*)("ABCDEFG");                 // trading account example, use all caps
+*/
+/*
+  szServer = (const char*)("127.0.0.1:8082/WEBTRADER");         // api end point example, actual endpoint should be provided by the vender, do not include "ws://"
+  apiKey = (const char*)("JAYTEST1");              // apikey
+  password = (const char*)("TESTTEST");              // apikeypwd
+  account = (const char*)("JAYTEST");                 // trading account example, use all caps
+*/
+  szServer = (const char*)("192.1.2.15/WEBTRADER");         // api end point example, actual endpoint should be provided by the vender, do not include "ws://"
+  apiKey = (const char*)("C3E347D0B67046D0923F12BBAA24E53C");              // apikey
+  password = (const char*)("123456");              // apikeypwd
+  account = (const char*)("SA10");                 // trading account example, use all caps
+  //pfxFile = (const char*)("D:/Desktop/SA10.pfx");
+  //pfxPwd = (const char*)("123456");
+  pfxFile = (const char*)("");
+  pfxPwd = (const char*)("");
 
-
-    int i = 0;
+//    int i = 0;
 //    std::cin >> i;
 //    if (i == 1) {
         // callback_sample();
 //    } else {
-        polling_sample_2();
+//        polling_sample_2();
 //    }
 
 //    demo();
+
+
+    demodoneaway();
 
     std::cout << "Bye" << std::endl;
     return 0;

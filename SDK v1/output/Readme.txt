@@ -1,8 +1,13 @@
 Disclaimer: This is a community-based project covered by the MIT license.
 
+SDK version 1.1.6.0
+2026/07/01
+
+SDK version 1.1.5.0
+2025/06/23
+
 SDK Version 1.1.0.0
 2024/10/23
-Bug fix for regular login to send doneaway trades to its own account.  Need authorization from the server.
 
 SDK Version 1.0.0.2
 2024/05/03
