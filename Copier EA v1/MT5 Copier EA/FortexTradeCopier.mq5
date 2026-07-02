@@ -9,6 +9,8 @@ input string   APIEndPoint="demo.fortex.com/WEBTRADER";
 input string   APIKey="";
 input string   APIPwd="";
 input string   APIAccount="";
+input string   PFXFile="";
+input string   PFXPwd="";
 input bool     ConvertFXSymbol = true;
 
 char fortexaccount[];
@@ -30,8 +32,12 @@ int OnInit()
    StringToCharArray(APIKey, apikey);
    char apikeypwd[];
    StringToCharArray(APIPwd,apikeypwd);
-   Init(address, 2);
-   if(Connect() !=0 || Login(apikey, apikeypwd) != 0){
+   char pfx[];
+   StringToCharArray(PFXFile, pfx);
+   char pfxPwd[];
+   StringToCharArray(PFXPwd, pfxPwd);
+   Init(address, pfx, pfxPwd, 2);
+   if(Connect() !=0 || Login(fortexaccount, apikey, apikeypwd) != 0){
       Print("login failed, reason:", GetLastError());
    }   
    else{
@@ -47,7 +53,14 @@ int OnInit()
 void OnDeinit(const int reason)
   {
 //---
-   
+  EventKillTimer();
+
+  if(reason == REASON_REMOVE)
+    {
+      Cleanup();
+      ExpertRemove();
+      Print("remove EA");
+    } 
   }
 //+------------------------------------------------------------------+
 //| Expert tick function                                             |
