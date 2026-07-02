@@ -1,7 +1,7 @@
 //+------------------------------------------------------------------+
 //|                                                    FortexApi.mq4 |
 //|                                              Copyright 2024, DS. |
-//|                                      Version 1.1.4.0, 2024/04/26 |
+//|                                      Version 1.1.5.0, 2025/06/12 |
 //+------------------------------------------------------------------+
 #property copyright "Copyright 2024, DS"
 #property link      ""
@@ -11,11 +11,12 @@
 
 #import "FortexWS32.dll"
 
-void Init(char& [], int msgRecvType);
+void Init(char& [], char& [], char& [], int msgRecvType);
 int GetState();
 int Connect();
-int Login(char& [], char& []);
+int Login(char& [], char& [], char& []);
 void Logout();
+void Cleanup();
 int QueryAccountInfo(char& []);
 int QuerySymbolList();
 int SubscribeMarketDataEx(int, char& [], int, int);

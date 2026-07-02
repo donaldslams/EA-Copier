@@ -9,6 +9,8 @@ input string   APIEndPoint="demo.fortex.com/WEBTRADER";
 input string   APIKey="";
 input string   APIPwd="";
 input string   APIAccount="";
+input string   PFXFile = "";
+input string   PFXPwd = "";
 input bool     ConvertFXSymbol = true;
 
 char fortexaccount[];
@@ -47,7 +49,6 @@ void fillData(TradeData& data){
 
 int OnInit()
   {
-   //must be initialised at the beginning of runtime to capture all old states
    fillData(prevData);
 //---
    StringToCharArray(APIAccount, fortexaccount);
@@ -57,15 +58,19 @@ int OnInit()
    StringToCharArray(APIKey, apikey);
    char apikeypwd[];
    StringToCharArray(APIPwd,apikeypwd);
-   Init(address, 2);
-   if(Connect() !=0 || Login(apikey, apikeypwd) != 0){
+   char pfx[];
+   StringToCharArray(PFXFile, pfx);
+   char pfxPwd[];
+   StringToCharArray(PFXPwd, pfxPwd);
+   Init(address, pfx, pfxPwd, 2);
+   if(Connect() !=0 || Login(fortexaccount, apikey, apikeypwd) != 0){
       Print("login failed, reason:", GetLastError());
    }   
    else{
+      Print("login successful");
       api_connected = true;   
    }
    
-   // fillData(prevData);
    EventSetTimer(1);
    
 //---
@@ -78,6 +83,9 @@ void OnDeinit(const int reason)
   {
 //---
    EventKillTimer();
+   Cleanup();
+   api_connected = false;
+   Print("deinit EA, reason:", reason);
   }
 //+------------------------------------------------------------------+
 //| Expert tick function                                             |
