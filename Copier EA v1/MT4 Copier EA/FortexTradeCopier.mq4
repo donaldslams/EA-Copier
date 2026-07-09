@@ -269,4 +269,5 @@ void sendDoneaway(string sym, TICKET_DIRECTION direction, int ticket, int cmd, d
    StringToCharArray("#4-" + login + "-" + ticketnum, refticketnum); // add "#" before the ticket number, fortex will use this as lookup keys to match with fortex assigned ticket number
    double amount = lot * SymbolInfoDouble(sym,SYMBOL_TRADE_CONTRACT_SIZE); // need to * the contract size for the trans.symbol         
    EnterDoneawayTrade(fortexaccount, symbol, direction, refticketnum, side, amount, price);
+   Print("symbol=", sym, ", refticketnum=", "#4-" + login + "-" + ticketnum, ", side=", side);
 }
