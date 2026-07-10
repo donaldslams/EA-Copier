@@ -12,6 +12,7 @@ input string   APIAccount="";
 input string   PFXFile = "";
 input string   PFXPwd = "";
 input bool     ConvertFXSymbol = true;
+input string   LogPath = "";
 
 char fortexaccount[];
 
@@ -62,6 +63,11 @@ int OnInit()
    StringToCharArray(PFXFile, pfx);
    char pfxPwd[];
    StringToCharArray(PFXPwd, pfxPwd);
+   if(StringLen(LogPath) > 0){
+      char logPath[];
+      StringToCharArray(LogPath, logPath);
+      SetLogPath(logPath);
+   }
    Init(address, pfx, pfxPwd, 2);
    if(Connect() !=0 || Login(fortexaccount, apikey, apikeypwd) != 0){
       Print("login failed, reason:", GetLastError());
@@ -269,5 +275,4 @@ void sendDoneaway(string sym, TICKET_DIRECTION direction, int ticket, int cmd, d
    StringToCharArray("#4-" + login + "-" + ticketnum, refticketnum); // add "#" before the ticket number, fortex will use this as lookup keys to match with fortex assigned ticket number
    double amount = lot * SymbolInfoDouble(sym,SYMBOL_TRADE_CONTRACT_SIZE); // need to * the contract size for the trans.symbol         
    EnterDoneawayTrade(fortexaccount, symbol, direction, refticketnum, side, amount, price);
-   Print("symbol=", sym, ", refticketnum=", "#4-" + login + "-" + ticketnum, ", side=", side);
 }

@@ -12,6 +12,7 @@ input string   APIAccount="";
 input string   PFXFile="";
 input string   PFXPwd="";
 input bool     ConvertFXSymbol = true;
+input string   LogPath = "";
 
 char fortexaccount[];
 
@@ -36,6 +37,11 @@ int OnInit()
    StringToCharArray(PFXFile, pfx);
    char pfxPwd[];
    StringToCharArray(PFXPwd, pfxPwd);
+   if(StringLen(LogPath) > 0){
+      char logPath[];
+      StringToCharArray(LogPath, logPath);
+      SetLogPath(logPath);
+   }
    Init(address, pfx, pfxPwd, 2);
    if(Connect() !=0 || Login(fortexaccount, apikey, apikeypwd) != 0){
       Print("login failed, reason:", GetLastError());

@@ -116,6 +116,7 @@ extern void PutDouble(int objType, int index, double val);
 extern void PutLongLong(int objType, int index, long long int val);
 extern void PutFloat(int objType, int index, float val);
 extern int ModifyOrderEx(char* account);
+extern void SetLogPath(char* path);
 extern void HighWaterMark(int value);
 extern char* GetLastErrorMessage(void);
 extern int GetState(void);

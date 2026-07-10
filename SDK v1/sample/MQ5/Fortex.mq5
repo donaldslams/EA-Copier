@@ -12,6 +12,7 @@
 #import "FortexWS64.dll"
 
 void Init(char& [], char& [], char& [], int msgRecvType);
+void SetLogPath(char& []);
 int GetState();
 int Connect();
 int Login(char& [], char& [], char& []);
